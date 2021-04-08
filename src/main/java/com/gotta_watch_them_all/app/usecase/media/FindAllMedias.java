@@ -13,6 +13,6 @@ public class FindAllMedias {
     private final MediaDao mediaDao;
 
     public List<Media> execute() {
-        return null;
+        return mediaDao.findAll();
     }
 }

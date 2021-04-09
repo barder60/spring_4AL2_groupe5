@@ -4,8 +4,10 @@ import com.gotta_watch_them_all.app.core.entity.Media;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.MediaEntity;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.mapper.MediaMapper;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.repository.MediaRepository;
+import com.gotta_watch_them_all.app.infrastructure.entrypoint.request.CreateMediaRequest;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
+import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -123,5 +125,58 @@ public class MediaApiTest {
 
             assertThat(response).isEqualTo("Media with id '" + expectMedia.getId() + "' not found");
         }
+    }
+
+    @DisplayName("METHOD POST /media")
+    @Nested
+    class CreateMedia {
+        // TODO : check if auth user is admin
+
+        // send error response when name is blank
+        @ParameterizedTest
+        @ValueSource(strings = {"", "   ", "\n", "\t"})
+        void when_name_is_blank_send_error_response(String blankName) {
+            var request = new CreateMediaRequest();
+            request.setName(blankName);
+
+            var response = given()
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when()
+                    .post("/api/media")
+                    .then()
+                    .statusCode(400)
+                    .extract()
+                    .asString();
+            assertThat(response).contains("{\"name\":\"Name has to be not blank\"}");
+        }
+
+        // Check if response return URI
+        @Test
+        public void when_name_is_correct_should_create_media_and_return_uri() {
+            CreateMediaRequest request = new CreateMediaRequest();
+            request.setName("series");
+            var response = given()
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when()
+                    .post("/api/media")
+                    .then()
+                    .statusCode(201)
+                    .extract()
+                    .header("Location");
+            var checkCreatedMedia = given()
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .get(response)
+                    .then()
+                    .statusCode(200)
+                    .extract()
+                    .as(Media.class);
+            assertThat(checkCreatedMedia.getId()).isNotNull().isInstanceOf(Long.class);
+            assertThat(checkCreatedMedia.getName()).isEqualTo(request.getName());
+        }
+
+        // TODO check error response when media name already exist
     }
 }

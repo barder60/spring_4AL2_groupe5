@@ -8,4 +8,8 @@ public interface MediaDao {
     List<Media> findAll();
 
     Media findById(Long mediaId);
+
+    Media findByName(String name);
+
+    Long createMedia(String name);
 }

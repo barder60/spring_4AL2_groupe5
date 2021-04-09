@@ -2,7 +2,7 @@ package com.gotta_watch_them_all.app.unit.usecase.media;
 
 import com.gotta_watch_them_all.app.core.dao.MediaDao;
 import com.gotta_watch_them_all.app.core.entity.Media;
-import com.gotta_watch_them_all.app.infrastructure.entrypoint.exception.NotFoundException;
+import com.gotta_watch_them_all.app.core.exception.NotFoundException;
 import com.gotta_watch_them_all.app.usecase.media.FindOneMedia;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

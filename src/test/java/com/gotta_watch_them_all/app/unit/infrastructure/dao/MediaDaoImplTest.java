@@ -92,4 +92,53 @@ class MediaDaoImplTest {
             assertThat(sut.findById(mediaId)).isNull();
         }
     }
+
+    @Nested
+    class FindByName {
+        @Test
+        void should_call_mediaRepository_to_find_media_by_name() {
+            var mediaName = "film";
+
+            sut.findByName(mediaName);
+
+            verify(mockMediaRepository, times(1)).findOneByName(mediaName);
+        }
+
+        @Test
+        void given_mediaName_when_media_found_should_return_concerned_media() {
+            var mediaName = "movie";
+            var movieMedia = MediaEntity.builder()
+                    .id(1L)
+                    .name(mediaName)
+                    .build();
+            var expected = MediaMapper.entityToDomain(movieMedia);
+            when(mockMediaRepository.findOneByName(mediaName)).thenReturn(movieMedia);
+
+            var result = sut.findByName(mediaName);
+
+            assertThat(result).isEqualTo(expected);
+        }
+    }
+
+    @Nested
+    class CreateMedia {
+
+        @Test
+        void when_new_media_saved_should_return_the_new_media_id() {
+            String newMediaName = "film";
+            MediaEntity mediaEntityToSave = MediaEntity.builder()
+                    .name(newMediaName)
+                    .build();
+            Long newMediaId = 3L;
+            MediaEntity savedMediaEntity = MediaEntity.builder()
+                    .id(newMediaId)
+                    .name(newMediaName).build();
+
+            when(mockMediaRepository.save(mediaEntityToSave)).thenReturn(savedMediaEntity);
+
+            var result = sut.createMedia(newMediaName);
+
+            assertThat(result).isEqualTo(newMediaId);
+        }
+    }
 }

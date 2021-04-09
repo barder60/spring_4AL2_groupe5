@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -59,6 +60,36 @@ class MediaDaoImplTest {
             var result = sut.findAll();
             assertThat(expectedList.size()).isEqualTo(expectedList.size());
             assertThat(result).isEqualTo(expectedList);
+        }
+    }
+
+    @Nested
+    class FindById {
+        @Test
+        void should_call_findById_of_mediaRepository() {
+            var mediaId = 1L;
+            sut.findById(mediaId);
+            verify(mockMediaRepository, times(1)).findById(mediaId);
+        }
+
+        @Test
+        void when_media_found_by_mediaRepository_should_return_media() {
+            var mediaId = 1L;
+            var filmMediaEntity = MediaEntity.builder().id(mediaId).name("film").build();
+            when(mockMediaRepository.findById(mediaId)).thenReturn(Optional.of(filmMediaEntity));
+            var expected = MediaMapper.entityToDomain(filmMediaEntity);
+
+            var result = sut.findById(mediaId);
+
+            assertThat(result).isEqualTo(expected);
+        }
+
+        @Test
+        void when_media_not_found_return_null() {
+            var mediaId = 1L;
+            when(mockMediaRepository.findById(mediaId)).thenReturn(Optional.empty());
+
+            assertThat(sut.findById(mediaId)).isNull();
         }
     }
 }

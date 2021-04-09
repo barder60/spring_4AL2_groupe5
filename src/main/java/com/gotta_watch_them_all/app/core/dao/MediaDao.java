@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MediaDao {
     List<Media> findAll();
+
+    Media findById(Long mediaId);
 }

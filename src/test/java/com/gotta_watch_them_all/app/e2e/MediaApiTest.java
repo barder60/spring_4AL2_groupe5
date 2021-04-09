@@ -82,7 +82,7 @@ public class MediaApiTest {
                     .statusCode(400);
         }
 
-/*        @Test
+        @Test
         void when_id_correspond_to_one_media_should_return_concerned_media() {
             MediaEntity filmMedia = MediaEntity.builder().name("film").build();
             MediaEntity seriesMedia = MediaEntity.builder().name("series").build();
@@ -100,6 +100,28 @@ public class MediaApiTest {
                     .as(Media.class);
 
             assertThat(response).isEqualTo(expectMedia);
-        }*/
+        }
+
+        @Test
+        void when_id_not_correspond_to_one_media_should_return_error_response() {
+            MediaEntity filmMedia = MediaEntity.builder().name("film").build();
+            MediaEntity seriesMedia = MediaEntity.builder().name("series").build();
+            MediaEntity mangaMedia = MediaEntity.builder().name("manga").build();
+            var mediaEntityList = Arrays.asList(filmMedia, seriesMedia, mangaMedia);
+            var savedMediaEntityList = mediaRepository.saveAll(mediaEntityList);
+
+            var expectMedia = MediaMapper.entityToDomain(savedMediaEntityList.get(1));
+            mediaRepository.deleteById(expectMedia.getId());
+
+            var response = given()
+                    .when()
+                    .get("/api/media/" + expectMedia.getId())
+                    .then()
+                    .statusCode(404)
+                    .extract()
+                    .asString();
+
+            assertThat(response).isEqualTo("Media with id '" + expectMedia.getId() + "' not found");
+        }
     }
 }

@@ -22,4 +22,11 @@ public class MediaDaoImpl implements MediaDao {
                 .map(MediaMapper::entityToDomain)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Media findById(Long mediaId) {
+        return mediaRepository.findById(mediaId)
+                .map(MediaMapper::entityToDomain)
+                .orElse(null);
+    }
 }

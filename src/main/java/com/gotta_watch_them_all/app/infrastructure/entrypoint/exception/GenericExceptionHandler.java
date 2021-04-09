@@ -2,7 +2,6 @@ package com.gotta_watch_them_all.app.infrastructure.entrypoint.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.tomcat.util.bcel.Const;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> on (ConstraintViolationException ex) {
+    public ResponseEntity<String> on(ConstraintViolationException ex) {
         return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> on(NotFoundException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @Override

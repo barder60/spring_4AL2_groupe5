@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -139,6 +141,43 @@ class MediaDaoImplTest {
             var result = sut.createMedia(newMediaName);
 
             assertThat(result).isEqualTo(newMediaId);
+        }
+    }
+
+    @Nested
+    class DeleteMedia {
+
+        @Test
+        void should_call_mediaRepository_to_delete_media_by_id() {
+            var mediaId = 1L;
+
+            sut.deleteMedia(mediaId);
+
+            verify(mockMediaRepository, times(1)).deleteById(mediaId);
+        }
+    }
+
+    @Nested
+    class ExistsById {
+
+        @Test
+        void should_call_mediaRepository_to_check_if_media_exists_by_id() {
+            var mediaId = 1L;
+
+            sut.existsById(mediaId);
+
+            verify(mockMediaRepository, times(1)).existsById(mediaId);
+        }
+
+        @ParameterizedTest
+        @ValueSource(booleans = {false, true})
+        void should_return_result_of_mediaRepository(boolean ifExists) {
+            var mediaId = 1L;
+            when(mockMediaRepository.existsById(mediaId)).thenReturn(ifExists);
+
+            var result = sut.existsById(mediaId);
+
+            assertThat(result).isEqualTo(ifExists);
         }
     }
 }

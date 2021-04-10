@@ -44,4 +44,14 @@ public class MediaDaoImpl implements MediaDao {
         MediaEntity newMedia = MediaEntity.builder().name(name).build();
         return mediaRepository.save(newMedia).getId();
     }
+
+    @Override
+    public void deleteMedia(Long mediaId) {
+        mediaRepository.deleteById(mediaId);
+    }
+
+    @Override
+    public boolean existsById(Long mediaId) {
+        return mediaRepository.existsById(mediaId);
+    }
 }

@@ -21,8 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.port;
+import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -192,6 +191,53 @@ public class MediaApiTest {
                     .extract()
                     .asString();
             assertThat(response).isEqualTo("Media with name 'series' is already created");
+        }
+    }
+
+    @DisplayName("METHOD DELETE /media/{id}")
+    @Nested
+    class DeleteMedia {
+        @ParameterizedTest
+        @ValueSource(strings = {"notId", "0", "-1", "2.1"})
+        void when_id_not_correct_should_send_error_response(String notCorrectId) {
+            when()
+                    .delete("/api/media/" + notCorrectId)
+                    .then()
+                    .statusCode(400);
+        }
+
+        @Test
+        void when_id_not_correspond_to_media_id_database_should_send_error_response() {
+            var mediaToSave = MediaEntity.builder()
+                    .name("film")
+                    .build();
+            var mediaToDelete = mediaRepository.save(mediaToSave);
+            mediaRepository.deleteById(mediaToDelete.getId());
+            var response = when()
+                    .delete("/api/media/" + mediaToDelete.getId())
+                    .then()
+                    .statusCode(404)
+                    .extract()
+                    .asString();
+            assertThat(response).isEqualTo("Media with id '" + mediaToDelete.getId() + "' not found");
+        }
+
+        @DirtiesContext
+        @Test
+        void when_media_with_certain_id_found_should_delete_concerned_media() {
+            var mediaToSave = MediaEntity.builder()
+                    .name("film")
+                    .build();
+            var mediaToDelete = mediaRepository.save(mediaToSave);
+
+            when()
+                    .delete("/api/media/" + mediaToDelete.getId())
+                    .then()
+                    .statusCode(204);
+
+            var maybeMedia = mediaRepository.findById(mediaToDelete.getId());
+
+            assertThat(maybeMedia.isPresent()).isFalse();
         }
     }
 }

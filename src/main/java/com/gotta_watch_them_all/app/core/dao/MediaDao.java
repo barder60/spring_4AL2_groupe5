@@ -12,4 +12,8 @@ public interface MediaDao {
     Media findByName(String name);
 
     Long createMedia(String name);
+
+    void deleteMedia(Long mediaId);
+
+    boolean existsById(Long mediaId);
 }

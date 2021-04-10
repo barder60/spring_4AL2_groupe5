@@ -5,6 +5,7 @@ import com.gotta_watch_them_all.app.core.exception.AlreadyCreatedException;
 import com.gotta_watch_them_all.app.core.exception.NotFoundException;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.request.CreateMediaRequest;
 import com.gotta_watch_them_all.app.usecase.media.AddMedia;
+import com.gotta_watch_them_all.app.usecase.media.DeleteMedia;
 import com.gotta_watch_them_all.app.usecase.media.FindAllMedias;
 import com.gotta_watch_them_all.app.usecase.media.FindOneMedia;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,7 @@ import javax.validation.constraints.Min;
 import java.net.URI;
 import java.util.List;
 
-import static org.springframework.http.ResponseEntity.created;
-import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.*;
 
 @RestController
 @RequestMapping("api/media")
@@ -29,6 +29,7 @@ public class MediaController {
     private final FindAllMedias findAllMedias;
     private final FindOneMedia findOneMedia;
     private final AddMedia addMedia;
+    private final DeleteMedia deleteMedia;
 
     @GetMapping
     public ResponseEntity<List<Media>> findAll() {
@@ -38,7 +39,7 @@ public class MediaController {
     @GetMapping("{id}")
     public ResponseEntity<Media> findById(
             @PathVariable("id")
-            @Min(value = 1, message = "id has to be more than 1") Long mediaId
+            @Min(value = 1, message = "id has to be equal or more than 1") Long mediaId
     ) throws NotFoundException {
         return ok(findOneMedia.execute(mediaId));
     }
@@ -51,5 +52,14 @@ public class MediaController {
                 .buildAndExpand(newMediaId)
                 .toUri();
         return created(uid).build();
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<?> deleteMedia(
+            @PathVariable("id")
+            @Min(value = 1, message = "id has to be equal or more than 1") Long mediaId
+    ) throws NotFoundException {
+        deleteMedia.execute(mediaId);
+        return noContent().build();
     }
 }

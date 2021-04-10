@@ -5,8 +5,6 @@ import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.MediaEnti
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.mapper.MediaMapper;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.repository.MediaRepository;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.request.CreateMediaRequest;
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -23,11 +21,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.port;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@DirtiesContext
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class MediaApiTest {
     @Autowired
@@ -39,7 +37,7 @@ public class MediaApiTest {
     @BeforeEach
     void setup() {
         port = localPort;
-        filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
+        //filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
     }
 
     @DisplayName("METHOD GET /media")
@@ -47,6 +45,7 @@ public class MediaApiTest {
     class FindAllMedias {
         @Test
         void should_get_all_medias() {
+            mediaRepository.deleteAll();
             MediaEntity filmMedia = MediaEntity.builder().name("film").build();
             MediaEntity seriesMedia = MediaEntity.builder().name("series").build();
             var mediaEntityList = Arrays.asList(filmMedia, seriesMedia);
@@ -132,7 +131,6 @@ public class MediaApiTest {
     class CreateMedia {
         // TODO : check if auth user is admin
 
-        // send error response when name is blank
         @ParameterizedTest
         @ValueSource(strings = {"", "   ", "\n", "\t"})
         void when_name_is_blank_send_error_response(String blankName) {
@@ -151,7 +149,7 @@ public class MediaApiTest {
             assertThat(response).contains("{\"name\":\"Name has to be not blank\"}");
         }
 
-        // Check if response return URI
+        @DirtiesContext
         @Test
         public void when_name_is_correct_should_create_media_and_return_uri() {
             CreateMediaRequest request = new CreateMediaRequest();
@@ -177,6 +175,23 @@ public class MediaApiTest {
             assertThat(checkCreatedMedia.getName()).isEqualTo(request.getName());
         }
 
-        // TODO check error response when media name already exist
+        @DirtiesContext
+        @Test
+        public void when_name_already_exist_should_send_error_response() {
+            mediaRepository.save(MediaEntity.builder().name("series").build());
+            CreateMediaRequest request = new CreateMediaRequest();
+            request.setName("series");
+
+            var response = given()
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when()
+                    .post("/api/media")
+                    .then()
+                    .statusCode(403)
+                    .extract()
+                    .asString();
+            assertThat(response).isEqualTo("Media with name 'series' is already created");
+        }
     }
 }

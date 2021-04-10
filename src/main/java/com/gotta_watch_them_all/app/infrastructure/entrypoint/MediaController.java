@@ -46,7 +46,7 @@ public class MediaController {
     @PostMapping
     public ResponseEntity<URI> createMedia(@Valid @RequestBody CreateMediaRequest request) throws AlreadyCreatedException {
         var newMediaId = addMedia.execute(request.getName());
-        var uid = ServletUriComponentsBuilder.fromCurrentRequest() // /api/users
+        var uid = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(newMediaId)
                 .toUri();

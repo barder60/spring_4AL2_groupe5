@@ -18,7 +18,7 @@ public class AddMedia {
 
     private void checkIfMediaNameNotExist(String name, com.gotta_watch_them_all.app.core.entity.Media check) throws AlreadyCreatedException {
         if (check != null) {
-            var message = String.format("Media with name '%s' already created", name);
+            var message = String.format("Media with name '%s' is already created", name);
             throw new AlreadyCreatedException(message);
         }
     }

@@ -44,7 +44,7 @@ class AddMediaTest {
 
         assertThatThrownBy(() -> sut.execute(mediaToCreate))
                 .isInstanceOf(AlreadyCreatedException.class)
-                .hasMessage("Media with name '" + mediaToCreate + "' already created");
+                .hasMessage("Media with name '" + mediaToCreate + "' is already created");
     }
 
     @Test

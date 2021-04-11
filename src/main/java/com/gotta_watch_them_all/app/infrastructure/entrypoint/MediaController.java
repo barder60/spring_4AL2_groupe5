@@ -16,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 import java.net.URI;
 import java.util.List;
 
@@ -39,13 +40,14 @@ public class MediaController {
     @GetMapping("{id}")
     public ResponseEntity<Media> findById(
             @PathVariable("id")
-            @Min(value = 1, message = "id has to be equal or more than 1") Long mediaId
+            @Pattern(regexp = "^\\d$", message = "id has to be an integer")
+            @Min(value = 1, message = "id has to be equal or more than 1") String mediaId
     ) throws NotFoundException {
-        return ok(findOneMedia.execute(mediaId));
+        return ok(findOneMedia.execute(Long.parseLong(mediaId)));
     }
 
     @PostMapping
-    public ResponseEntity<URI> createMedia(@Valid @RequestBody CreateMediaRequest request) throws AlreadyCreatedException {
+    public ResponseEntity<URI> saveOne(@Valid @RequestBody CreateMediaRequest request) throws AlreadyCreatedException {
         var newMediaId = addMedia.execute(request.getName());
         var uid = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -55,11 +57,12 @@ public class MediaController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteMedia(
+    public ResponseEntity<?> deleteOne(
             @PathVariable("id")
-            @Min(value = 1, message = "id has to be equal or more than 1") Long mediaId
+            @Pattern(regexp = "^\\d$", message = "id has to be an integer")
+            @Min(value = 1, message = "id has to be equal or more than 1") String mediaId
     ) throws NotFoundException {
-        deleteMedia.execute(mediaId);
+        deleteMedia.execute(Long.parseLong(mediaId));
         return noContent().build();
     }
 }

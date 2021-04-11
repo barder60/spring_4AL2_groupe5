@@ -10,12 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +24,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class MediaApiTest {
+
     @Autowired
     private MediaRepository mediaRepository;
 
@@ -36,7 +34,6 @@ public class MediaApiTest {
     @BeforeEach
     void setup() {
         port = localPort;
-        //filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
     }
 
     @DisplayName("METHOD GET /media")
@@ -72,16 +69,6 @@ public class MediaApiTest {
     @DisplayName("METHOD GET /media/{id}")
     @Nested
     class FindOneMedia {
-        @ParameterizedTest
-        @ValueSource(strings = {"notNumber", "1.0", "0", "-1"})
-        void when_id_is_not_integer_more_than_zero_should_get_error_response(String notCorrectId) {
-            given()
-                    .when()
-                    .get("/api/media/" + notCorrectId)
-                    .then()
-                    .statusCode(400);
-        }
-
         @Test
         void when_id_correspond_to_one_media_should_return_concerned_media() {
             MediaEntity filmMedia = MediaEntity.builder().name("film").build();
@@ -101,28 +88,6 @@ public class MediaApiTest {
 
             assertThat(response).isEqualTo(expectMedia);
         }
-
-        @Test
-        void when_id_not_correspond_to_one_media_should_return_error_response() {
-            MediaEntity filmMedia = MediaEntity.builder().name("film").build();
-            MediaEntity seriesMedia = MediaEntity.builder().name("series").build();
-            MediaEntity mangaMedia = MediaEntity.builder().name("manga").build();
-            var mediaEntityList = Arrays.asList(filmMedia, seriesMedia, mangaMedia);
-            var savedMediaEntityList = mediaRepository.saveAll(mediaEntityList);
-
-            var expectMedia = MediaMapper.entityToDomain(savedMediaEntityList.get(1));
-            mediaRepository.deleteById(expectMedia.getId());
-
-            var response = given()
-                    .when()
-                    .get("/api/media/" + expectMedia.getId())
-                    .then()
-                    .statusCode(404)
-                    .extract()
-                    .asString();
-
-            assertThat(response).isEqualTo("Media with id '" + expectMedia.getId() + "' not found");
-        }
     }
 
     @DisplayName("METHOD POST /media")
@@ -130,25 +95,6 @@ public class MediaApiTest {
     class CreateMedia {
         // TODO : check if auth user is admin
 
-        @ParameterizedTest
-        @ValueSource(strings = {"", "   ", "\n", "\t"})
-        void when_name_is_blank_send_error_response(String blankName) {
-            var request = new CreateMediaRequest();
-            request.setName(blankName);
-
-            var response = given()
-                    .contentType(ContentType.JSON)
-                    .body(request)
-                    .when()
-                    .post("/api/media")
-                    .then()
-                    .statusCode(400)
-                    .extract()
-                    .asString();
-            assertThat(response).contains("{\"name\":\"Name has to be not blank\"}");
-        }
-
-        @DirtiesContext
         @Test
         public void when_name_is_correct_should_create_media_and_return_uri() {
             CreateMediaRequest request = new CreateMediaRequest();
@@ -174,12 +120,11 @@ public class MediaApiTest {
             assertThat(checkCreatedMedia.getName()).isEqualTo(request.getName());
         }
 
-        @DirtiesContext
         @Test
         public void when_name_already_exist_should_send_error_response() {
-            mediaRepository.save(MediaEntity.builder().name("series").build());
+            mediaRepository.save(MediaEntity.builder().name("series2").build());
             CreateMediaRequest request = new CreateMediaRequest();
-            request.setName("series");
+            request.setName("series2");
 
             var response = given()
                     .contentType(ContentType.JSON)
@@ -190,39 +135,13 @@ public class MediaApiTest {
                     .statusCode(403)
                     .extract()
                     .asString();
-            assertThat(response).isEqualTo("Media with name 'series' is already created");
+            assertThat(response).isEqualTo("Media with name 'series2' is already created");
         }
     }
 
     @DisplayName("METHOD DELETE /media/{id}")
     @Nested
     class DeleteMedia {
-        @ParameterizedTest
-        @ValueSource(strings = {"notId", "0", "-1", "2.1"})
-        void when_id_not_correct_should_send_error_response(String notCorrectId) {
-            when()
-                    .delete("/api/media/" + notCorrectId)
-                    .then()
-                    .statusCode(400);
-        }
-
-        @Test
-        void when_id_not_correspond_to_media_id_database_should_send_error_response() {
-            var mediaToSave = MediaEntity.builder()
-                    .name("film")
-                    .build();
-            var mediaToDelete = mediaRepository.save(mediaToSave);
-            mediaRepository.deleteById(mediaToDelete.getId());
-            var response = when()
-                    .delete("/api/media/" + mediaToDelete.getId())
-                    .then()
-                    .statusCode(404)
-                    .extract()
-                    .asString();
-            assertThat(response).isEqualTo("Media with id '" + mediaToDelete.getId() + "' not found");
-        }
-
-        @DirtiesContext
         @Test
         void when_media_with_certain_id_found_should_delete_concerned_media() {
             var mediaToSave = MediaEntity.builder()

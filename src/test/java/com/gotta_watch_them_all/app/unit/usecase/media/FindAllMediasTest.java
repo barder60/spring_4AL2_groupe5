@@ -36,14 +36,12 @@ class FindAllMediasTest {
 
     @Test
     void should_return_list_medias_find_by_mediaDao() {
-        Media filmMedia = Media.builder()
-                .id(1L)
-                .name("film")
-                .build();
-        Media seriesMedia = Media.builder()
-                .id(2L)
-                .name("series")
-                .build();
+        Media filmMedia = new Media()
+                .setId(1L)
+                .setName("film");
+        Media seriesMedia = new Media()
+                .setId(2L)
+                .setName("series");
         List<Media> mediaList = Arrays.asList(filmMedia, seriesMedia);
         when(mockMediaDao.findAll()).thenReturn(mediaList);
 

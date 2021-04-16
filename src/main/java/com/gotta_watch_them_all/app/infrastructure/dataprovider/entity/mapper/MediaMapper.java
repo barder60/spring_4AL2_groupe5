@@ -5,9 +5,8 @@ import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.MediaEnti
 
 public class MediaMapper {
     public static Media entityToDomain(MediaEntity entity) {
-        return Media.builder()
-                .id(entity.getId())
-                .name(entity.getName())
-                .build();
+        return new Media()
+                .setId(entity.getId())
+                .setName(entity.getName());
     }
 }

@@ -40,7 +40,7 @@ class AddMediaTest {
     void when_media_already_exist_should_throw_exception() {
         String mediaToCreate = "media to create";
 
-        when(mockMediaDao.findByName(mediaToCreate)).thenReturn(Media.builder().id(1L).name(mediaToCreate).build());
+        when(mockMediaDao.findByName(mediaToCreate)).thenReturn(new Media().setId(1L).setName(mediaToCreate));
 
         assertThatThrownBy(() -> sut.execute(mediaToCreate))
                 .isInstanceOf(AlreadyCreatedException.class)

@@ -57,8 +57,8 @@ class MediaControllerTest {
     class FindAll {
         @Test
         void when_call_findAllMedias_should_return_list_media() throws Exception {
-            var filmMedia = Media.builder().id(1L).name("film").build();
-            var seriesMedia = Media.builder().id(2L).name("series").build();
+            var filmMedia = new Media().setId(1L).setName("film");
+            var seriesMedia = new Media().setId(2L).setName("series");
             var mediaList = Arrays.asList(filmMedia, seriesMedia);
             var mediaResponseList = mediaList.stream()
                     .map(MediaAdapter::domainToResponse)

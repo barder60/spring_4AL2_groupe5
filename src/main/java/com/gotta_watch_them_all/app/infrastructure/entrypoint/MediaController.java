@@ -1,9 +1,10 @@
 package com.gotta_watch_them_all.app.infrastructure.entrypoint;
 
-import com.gotta_watch_them_all.app.core.entity.Media;
 import com.gotta_watch_them_all.app.core.exception.AlreadyCreatedException;
 import com.gotta_watch_them_all.app.core.exception.NotFoundException;
+import com.gotta_watch_them_all.app.infrastructure.entrypoint.adapter.media.MediaAdapter;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.request.CreateMediaRequest;
+import com.gotta_watch_them_all.app.infrastructure.entrypoint.response.MediaResponse;
 import com.gotta_watch_them_all.app.usecase.media.AddMedia;
 import com.gotta_watch_them_all.app.usecase.media.DeleteMedia;
 import com.gotta_watch_them_all.app.usecase.media.FindAllMedias;
@@ -19,6 +20,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.*;
 
@@ -33,17 +35,21 @@ public class MediaController {
     private final DeleteMedia deleteMedia;
 
     @GetMapping
-    public ResponseEntity<List<Media>> findAll() {
-        return ok(findAllMedias.execute());
+    public ResponseEntity<List<MediaResponse>> findAll() {
+        var medias = findAllMedias.execute().stream()
+                .map(MediaAdapter::domainToResponse)
+                .collect(Collectors.toList());
+        return ok(medias);
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Media> findById(
+    public ResponseEntity<MediaResponse> findById(
             @PathVariable("id")
             @Pattern(regexp = "^\\d$", message = "id has to be an integer")
             @Min(value = 1, message = "id has to be equal or more than 1") String mediaId
     ) throws NotFoundException {
-        return ok(findOneMedia.execute(Long.parseLong(mediaId)));
+        var media = findOneMedia.execute(Long.parseLong(mediaId));
+        return ok(MediaAdapter.domainToResponse(media));
     }
 
     @PostMapping

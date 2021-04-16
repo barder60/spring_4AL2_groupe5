@@ -114,6 +114,22 @@ class MediaControllerTest {
                     .getContentAsString();
             assertThat(errorContent).isEqualTo(message);
         }
+
+        @Test
+        void when_findOneMedia_return_one_media_should_send_success_response() throws Exception {
+            var mediaId = 1L;
+            var foundMedia = new Media().setId(mediaId).setName("film");
+            var mediaResponse = MediaAdapter.domainToResponse(foundMedia);
+
+            when(mockFindOneMedia.execute(mediaId)).thenReturn(foundMedia);
+            var contentAsString = mockMvc.perform(get("/api/media/" + mediaId))
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+            var response = jsonToObject(contentAsString, MediaResponse.class);
+            assertThat(response).isEqualTo(mediaResponse);
+        }
     }
 
     @DisplayName("POST /api/media")

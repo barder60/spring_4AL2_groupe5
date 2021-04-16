@@ -41,7 +41,7 @@ public class MediaDaoImpl implements MediaDao {
 
     @Override
     public Long createMedia(String name) {
-        MediaEntity newMedia = MediaEntity.builder().name(name).build();
+        MediaEntity newMedia = new MediaEntity().setName(name);
         return mediaRepository.save(newMedia).getId();
     }
 

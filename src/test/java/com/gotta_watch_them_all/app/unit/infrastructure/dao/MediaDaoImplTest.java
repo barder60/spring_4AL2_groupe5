@@ -45,14 +45,14 @@ class MediaDaoImplTest {
 
         @Test
         void should_return_media_list() {
-            MediaEntity filmMedia = MediaEntity.builder()
-                    .id(1L)
-                    .name("film")
-                    .build();
-            MediaEntity seriesMedia = MediaEntity.builder()
-                    .id(2L)
-                    .name("series")
-                    .build();
+            MediaEntity filmMedia = new MediaEntity()
+                    .setId(1L)
+                    .setName("film")
+                    ;
+            MediaEntity seriesMedia = new MediaEntity()
+                    .setId(2L)
+                    .setName("series")
+                    ;
             List<MediaEntity> mediaList = Arrays.asList(filmMedia, seriesMedia);
             List<Media> expectedList = mediaList.stream()
                     .map(MediaMapper::entityToDomain)
@@ -77,7 +77,7 @@ class MediaDaoImplTest {
         @Test
         void when_media_found_by_mediaRepository_should_return_media() {
             var mediaId = 1L;
-            var filmMediaEntity = MediaEntity.builder().id(mediaId).name("film").build();
+            var filmMediaEntity = new MediaEntity().setId(mediaId).setName("film");
             when(mockMediaRepository.findById(mediaId)).thenReturn(Optional.of(filmMediaEntity));
             var expected = MediaMapper.entityToDomain(filmMediaEntity);
 
@@ -109,10 +109,10 @@ class MediaDaoImplTest {
         @Test
         void given_mediaName_when_media_found_should_return_concerned_media() {
             var mediaName = "movie";
-            var movieMedia = MediaEntity.builder()
-                    .id(1L)
-                    .name(mediaName)
-                    .build();
+            var movieMedia = new MediaEntity()
+                    .setId(1L)
+                    .setName(mediaName)
+                    ;
             var expected = MediaMapper.entityToDomain(movieMedia);
             when(mockMediaRepository.findOneByName(mediaName)).thenReturn(movieMedia);
 
@@ -128,13 +128,13 @@ class MediaDaoImplTest {
         @Test
         void when_new_media_saved_should_return_the_new_media_id() {
             String newMediaName = "film";
-            MediaEntity mediaEntityToSave = MediaEntity.builder()
-                    .name(newMediaName)
-                    .build();
+            MediaEntity mediaEntityToSave = new MediaEntity()
+                    .setName(newMediaName)
+                    ;
             Long newMediaId = 3L;
-            MediaEntity savedMediaEntity = MediaEntity.builder()
-                    .id(newMediaId)
-                    .name(newMediaName).build();
+            MediaEntity savedMediaEntity = new MediaEntity()
+                    .setId(newMediaId)
+                    .setName(newMediaName);
 
             when(mockMediaRepository.save(mediaEntityToSave)).thenReturn(savedMediaEntity);
 

@@ -3,7 +3,9 @@ package com.gotta_watch_them_all.app.integration;
 import com.gotta_watch_them_all.app.core.entity.Media;
 import com.gotta_watch_them_all.app.core.exception.AlreadyCreatedException;
 import com.gotta_watch_them_all.app.core.exception.NotFoundException;
+import com.gotta_watch_them_all.app.infrastructure.entrypoint.adapter.media.MediaAdapter;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.request.CreateMediaRequest;
+import com.gotta_watch_them_all.app.infrastructure.entrypoint.response.MediaResponse;
 import com.gotta_watch_them_all.app.usecase.media.AddMedia;
 import com.gotta_watch_them_all.app.usecase.media.DeleteMedia;
 import com.gotta_watch_them_all.app.usecase.media.FindAllMedias;
@@ -22,8 +24,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.gotta_watch_them_all.app.helper.JsonHelper.jsonToObject;
 import static com.gotta_watch_them_all.app.helper.JsonHelper.objectToJson;
@@ -55,9 +57,13 @@ class MediaControllerTest {
     class FindAll {
         @Test
         void when_call_findAllMedias_should_return_list_media() throws Exception {
-            Media filmMedia = Media.builder().id(1L).name("film").build();
-            Media seriesMedia = Media.builder().id(2L).name("series").build();
-            List<Media> mediaList = Arrays.asList(filmMedia, seriesMedia);
+            var filmMedia = new Media().setId(1L).setName("film");
+            var seriesMedia = new Media().setId(2L).setName("series");
+            var mediaList = Arrays.asList(filmMedia, seriesMedia);
+            var mediaResponseList = mediaList.stream()
+                    .map(MediaAdapter::domainToResponse)
+                    .collect(Collectors.toList());
+            ;
             when(mockFindAllMedias.execute()).thenReturn(mediaList);
 
             var contentAsString = mockMvc.perform(get("/api/media"))
@@ -65,9 +71,9 @@ class MediaControllerTest {
                     .andReturn()
                     .getResponse()
                     .getContentAsString();
-            var result = Arrays.asList(Objects.requireNonNull(jsonToObject(contentAsString, Media[].class)));
+            var result = Arrays.asList(Objects.requireNonNull(jsonToObject(contentAsString, MediaResponse[].class)));
 
-            assertThat(result).isEqualTo(mediaList);
+            assertThat(result).isEqualTo(mediaResponseList);
         }
     }
 
@@ -107,6 +113,22 @@ class MediaControllerTest {
                     .getResponse()
                     .getContentAsString();
             assertThat(errorContent).isEqualTo(message);
+        }
+
+        @Test
+        void when_findOneMedia_return_one_media_should_send_success_response() throws Exception {
+            var mediaId = 1L;
+            var foundMedia = new Media().setId(mediaId).setName("film");
+            var mediaResponse = MediaAdapter.domainToResponse(foundMedia);
+
+            when(mockFindOneMedia.execute(mediaId)).thenReturn(foundMedia);
+            var contentAsString = mockMvc.perform(get("/api/media/" + mediaId))
+                    .andExpect(status().isOk())
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+            var response = jsonToObject(contentAsString, MediaResponse.class);
+            assertThat(response).isEqualTo(mediaResponse);
         }
     }
 

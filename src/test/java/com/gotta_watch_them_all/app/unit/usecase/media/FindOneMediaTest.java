@@ -39,10 +39,9 @@ class FindOneMediaTest {
     @Test
     public void when_mediaDao_found_media_should_return_concerned_one() throws NotFoundException {
         var mediaId = 1L;
-        var expectedMedia = Media.builder()
-                .id(mediaId)
-                .name("The media")
-                .build();
+        var expectedMedia = new Media()
+                .setId(mediaId)
+                .setName("The media");
         when(mockMediaDao.findById(mediaId)).thenReturn(expectedMedia);
 
         var result = sut.execute(mediaId);

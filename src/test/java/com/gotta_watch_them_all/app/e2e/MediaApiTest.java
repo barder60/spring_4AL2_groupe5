@@ -42,8 +42,8 @@ public class MediaApiTest {
         @Test
         void should_get_all_medias() {
             mediaRepository.deleteAll();
-            MediaEntity filmMedia = MediaEntity.builder().name("film").build();
-            MediaEntity seriesMedia = MediaEntity.builder().name("series").build();
+            MediaEntity filmMedia = new MediaEntity().setName("film");
+            MediaEntity seriesMedia = new MediaEntity().setName("series");
             var mediaEntityList = Arrays.asList(filmMedia, seriesMedia);
             mediaRepository.saveAll(mediaEntityList);
 
@@ -71,9 +71,9 @@ public class MediaApiTest {
     class FindOneMedia {
         @Test
         void when_id_correspond_to_one_media_should_return_concerned_media() {
-            MediaEntity filmMedia = MediaEntity.builder().name("film").build();
-            MediaEntity seriesMedia = MediaEntity.builder().name("series").build();
-            MediaEntity mangaMedia = MediaEntity.builder().name("manga").build();
+            MediaEntity filmMedia = new MediaEntity().setName("film");
+            MediaEntity seriesMedia = new MediaEntity().setName("series");
+            MediaEntity mangaMedia = new MediaEntity().setName("manga");
             var mediaEntityList = Arrays.asList(filmMedia, seriesMedia, mangaMedia);
             var savedMediaEntityList = mediaRepository.saveAll(mediaEntityList);
 
@@ -122,7 +122,7 @@ public class MediaApiTest {
 
         @Test
         public void when_name_already_exist_should_send_error_response() {
-            mediaRepository.save(MediaEntity.builder().name("series2").build());
+            mediaRepository.save(new MediaEntity().setName("series2"));
             CreateMediaRequest request = new CreateMediaRequest();
             request.setName("series2");
 
@@ -144,9 +144,9 @@ public class MediaApiTest {
     class DeleteMedia {
         @Test
         void when_media_with_certain_id_found_should_delete_concerned_media() {
-            var mediaToSave = MediaEntity.builder()
-                    .name("film")
-                    .build();
+            var mediaToSave = new MediaEntity()
+                    .setName("film")
+                    ;
             var mediaToDelete = mediaRepository.save(mediaToSave);
 
             when()

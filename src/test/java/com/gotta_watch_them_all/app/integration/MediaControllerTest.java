@@ -3,7 +3,7 @@ package com.gotta_watch_them_all.app.integration;
 import com.gotta_watch_them_all.app.core.entity.Media;
 import com.gotta_watch_them_all.app.core.exception.AlreadyCreatedException;
 import com.gotta_watch_them_all.app.core.exception.NotFoundException;
-import com.gotta_watch_them_all.app.infrastructure.entrypoint.adapter.media.MediaAdapter;
+import com.gotta_watch_them_all.app.infrastructure.entrypoint.adapter.MediaAdapter;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.request.CreateMediaRequest;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.response.MediaResponse;
 import com.gotta_watch_them_all.app.usecase.media.AddMedia;

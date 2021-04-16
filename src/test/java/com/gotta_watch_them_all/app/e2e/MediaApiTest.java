@@ -2,7 +2,7 @@ package com.gotta_watch_them_all.app.e2e;
 
 import com.gotta_watch_them_all.app.core.entity.Media;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.MediaEntity;
-import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.mapper.MediaMapper;
+import com.gotta_watch_them_all.app.infrastructure.dataprovider.mapper.MediaMapper;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.repository.MediaRepository;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.request.CreateMediaRequest;
 import io.restassured.http.ContentType;

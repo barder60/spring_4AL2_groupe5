@@ -1,4 +1,4 @@
-package com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.mapper;
+package com.gotta_watch_them_all.app.infrastructure.dataprovider.mapper;
 
 import com.gotta_watch_them_all.app.core.entity.Media;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.MediaEntity;

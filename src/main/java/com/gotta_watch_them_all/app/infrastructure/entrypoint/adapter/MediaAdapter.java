@@ -1,4 +1,4 @@
-package com.gotta_watch_them_all.app.infrastructure.entrypoint.adapter.media;
+package com.gotta_watch_them_all.app.infrastructure.entrypoint.adapter;
 
 import com.gotta_watch_them_all.app.core.entity.Media;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.response.MediaResponse;

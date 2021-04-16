@@ -3,7 +3,7 @@ package com.gotta_watch_them_all.app.infrastructure.dao;
 import com.gotta_watch_them_all.app.core.dao.MediaDao;
 import com.gotta_watch_them_all.app.core.entity.Media;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.MediaEntity;
-import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.mapper.MediaMapper;
+import com.gotta_watch_them_all.app.infrastructure.dataprovider.mapper.MediaMapper;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.repository.MediaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

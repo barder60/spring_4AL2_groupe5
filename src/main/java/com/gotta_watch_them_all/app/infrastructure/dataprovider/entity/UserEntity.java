@@ -39,4 +39,7 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<RoleEntity> roles = new HashSet<>();
+
+    @Column(name = "is_vulgar")
+    private boolean isVulgar;
 }

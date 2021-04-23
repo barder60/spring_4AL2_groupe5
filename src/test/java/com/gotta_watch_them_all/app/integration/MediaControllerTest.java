@@ -10,6 +10,7 @@ import com.gotta_watch_them_all.app.usecase.media.AddMedia;
 import com.gotta_watch_them_all.app.usecase.media.DeleteMedia;
 import com.gotta_watch_them_all.app.usecase.media.FindAllMedias;
 import com.gotta_watch_them_all.app.usecase.media.FindOneMedia;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Disabled
 @SpringBootTest
 @AutoConfigureMockMvc
 class MediaControllerTest {

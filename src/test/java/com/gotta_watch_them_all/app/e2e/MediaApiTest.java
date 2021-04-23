@@ -6,10 +6,7 @@ import com.gotta_watch_them_all.app.infrastructure.dataprovider.mapper.MediaMapp
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.repository.MediaRepository;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.request.CreateMediaRequest;
 import io.restassured.http.ContentType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
@@ -22,6 +19,7 @@ import static io.restassured.RestAssured.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
+@Disabled
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 public class MediaApiTest {
 

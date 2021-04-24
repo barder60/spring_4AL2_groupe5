@@ -66,7 +66,7 @@ public class MediaApiTest {
 
     @DisplayName("METHOD GET /media/{id}")
     @Nested
-    class FindOneMedia {
+    class FindMediaById {
         @Test
         void when_id_correspond_to_one_media_should_return_concerned_media() {
             MediaEntity filmMedia = new MediaEntity().setName("film");

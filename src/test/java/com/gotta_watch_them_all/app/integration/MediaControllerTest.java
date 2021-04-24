@@ -9,7 +9,7 @@ import com.gotta_watch_them_all.app.infrastructure.entrypoint.response.MediaResp
 import com.gotta_watch_them_all.app.usecase.media.AddMedia;
 import com.gotta_watch_them_all.app.usecase.media.DeleteMedia;
 import com.gotta_watch_them_all.app.usecase.media.FindAllMedias;
-import com.gotta_watch_them_all.app.usecase.media.FindOneMedia;
+import com.gotta_watch_them_all.app.usecase.media.FindMediaById;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -49,7 +49,7 @@ class MediaControllerTest {
     private AddMedia mockAddMedia;
 
     @MockBean
-    private FindOneMedia mockFindOneMedia;
+    private FindMediaById mockFindMediaById;
 
     @MockBean
     private DeleteMedia mockDeleteMedia;
@@ -108,7 +108,7 @@ class MediaControllerTest {
         void when_findOneMedia_throw_NotFoundException_should_send_not_found_response() throws Exception {
             var mediaId = 1L;
             var message = String.format("Media with '%d' not found", mediaId);
-            when(mockFindOneMedia.execute(mediaId)).thenThrow(new NotFoundException(message));
+            when(mockFindMediaById.execute(mediaId)).thenThrow(new NotFoundException(message));
             var errorContent = mockMvc.perform(get("/api/media/" + mediaId))
                     .andExpect(status().isNotFound())
                     .andReturn()
@@ -123,7 +123,7 @@ class MediaControllerTest {
             var foundMedia = new Media().setId(mediaId).setName("film");
             var mediaResponse = MediaAdapter.domainToResponse(foundMedia);
 
-            when(mockFindOneMedia.execute(mediaId)).thenReturn(foundMedia);
+            when(mockFindMediaById.execute(mediaId)).thenReturn(foundMedia);
             var contentAsString = mockMvc.perform(get("/api/media/" + mediaId))
                     .andExpect(status().isOk())
                     .andReturn()

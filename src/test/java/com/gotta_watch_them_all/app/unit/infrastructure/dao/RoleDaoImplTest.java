@@ -29,7 +29,7 @@ class RoleDaoImplTest {
     private RoleDaoImpl sut;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         sut = new RoleDaoImpl(mockRoleRepository);
     }
 
@@ -77,13 +77,13 @@ class RoleDaoImplTest {
     @Nested
     class FindAll {
         @Test
-        void shouldCallFindAllOfRoleRepository() {
+        void should_call_findAll_of_roleRepository() {
             sut.findAll();
             verify(mockRoleRepository, times(1)).findAll();
         }
 
         @Test
-        void shouldReturnListOfRole() {
+        void should_return_list_of_role() {
             var userRoleEntity = new RoleEntity().setId(1L).setName(RoleName.ROLE_USER);
             var adminRoleEntity = new RoleEntity().setId(2L).setName(RoleName.ROLE_ADMIN);
             var roleEntities = Arrays.asList(userRoleEntity, adminRoleEntity);

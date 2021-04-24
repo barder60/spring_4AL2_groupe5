@@ -34,7 +34,7 @@ public class MediaApiTest {
         port = localPort;
     }
 
-    @DisplayName("METHOD GET /media")
+    @DisplayName("METHOD GET /api/media")
     @Nested
     class FindAllMedias {
         @Test
@@ -64,7 +64,7 @@ public class MediaApiTest {
         }
     }
 
-    @DisplayName("METHOD GET /media/{id}")
+    @DisplayName("METHOD GET /api/media/{id}")
     @Nested
     class FindMediaById {
         @Test
@@ -88,7 +88,7 @@ public class MediaApiTest {
         }
     }
 
-    @DisplayName("METHOD POST /media")
+    @DisplayName("METHOD POST /api/media")
     @Nested
     class CreateMedia {
         // TODO : check if auth user is admin
@@ -137,14 +137,13 @@ public class MediaApiTest {
         }
     }
 
-    @DisplayName("METHOD DELETE /media/{id}")
+    @DisplayName("METHOD DELETE /api/media/{id}")
     @Nested
     class DeleteMedia {
         @Test
         void when_media_with_certain_id_found_should_delete_concerned_media() {
             var mediaToSave = new MediaEntity()
-                    .setName("film")
-                    ;
+                    .setName("film");
             var mediaToDelete = mediaRepository.save(mediaToSave);
 
             when()

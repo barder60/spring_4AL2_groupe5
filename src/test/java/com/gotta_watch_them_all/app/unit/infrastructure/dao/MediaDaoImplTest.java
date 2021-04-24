@@ -31,7 +31,7 @@ class MediaDaoImplTest {
     private MediaDaoImpl sut;
 
     @BeforeEach
-    void setUp() {
+    void setup() {
         sut = new MediaDaoImpl(mockMediaRepository);
     }
 

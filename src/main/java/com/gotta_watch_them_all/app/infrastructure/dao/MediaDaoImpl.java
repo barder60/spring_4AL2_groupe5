@@ -54,4 +54,19 @@ public class MediaDaoImpl implements MediaDao {
     public boolean existsById(Long mediaId) {
         return mediaRepository.existsById(mediaId);
     }
+
+    @Override
+    public void deleteAll() {
+        mediaRepository.deleteAll();
+    }
+
+    @Override
+    public List<Media> saveAll(List<Media> mediaList) {
+        var mediaEntityList = mediaList.stream()
+                .map(MediaMapper::domainToEntity)
+                .collect(Collectors.toList());
+        return mediaRepository.saveAll(mediaEntityList).stream()
+                .map(MediaMapper::entityToDomain)
+                .collect(Collectors.toList());
+    }
 }

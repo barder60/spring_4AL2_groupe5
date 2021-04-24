@@ -1,8 +1,11 @@
 package com.gotta_watch_them_all.app.integration;
 
+import com.gotta_watch_them_all.app.core.dao.RoleDao;
 import com.gotta_watch_them_all.app.core.entity.Media;
+import com.gotta_watch_them_all.app.core.entity.RoleName;
 import com.gotta_watch_them_all.app.core.exception.AlreadyCreatedException;
 import com.gotta_watch_them_all.app.core.exception.NotFoundException;
+import com.gotta_watch_them_all.app.helper.AuthHelper;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.adapter.MediaAdapter;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.request.CreateMediaRequest;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.response.MediaResponse;
@@ -10,10 +13,7 @@ import com.gotta_watch_them_all.app.usecase.media.AddMedia;
 import com.gotta_watch_them_all.app.usecase.media.DeleteMedia;
 import com.gotta_watch_them_all.app.usecase.media.FindAllMedias;
 import com.gotta_watch_them_all.app.usecase.media.FindMediaById;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.gotta_watch_them_all.app.helper.JsonHelper.jsonToObject;
@@ -35,12 +36,18 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Disabled
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MediaControllerTest {
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private AuthHelper authHelper;
+
+    @Autowired
+    private RoleDao roleDao;
 
     @MockBean
     private FindAllMedias mockFindAllMedias;
@@ -54,6 +61,14 @@ class MediaControllerTest {
     @MockBean
     private DeleteMedia mockDeleteMedia;
 
+    private String jwtAdmin;
+
+    @BeforeAll
+    void initAll() {
+        var adminRole = roleDao.findByRoleName(RoleName.ROLE_ADMIN);
+        jwtAdmin = authHelper.createUserAndGetJwt("username", "user@name.fr", "password", Set.of(adminRole));
+    }
+
     @DisplayName("GET /api/media")
     @Nested
     class FindAll {
@@ -65,10 +80,12 @@ class MediaControllerTest {
             var mediaResponseList = mediaList.stream()
                     .map(MediaAdapter::domainToResponse)
                     .collect(Collectors.toList());
-            ;
+
             when(mockFindAllMedias.execute()).thenReturn(mediaList);
 
-            var contentAsString = mockMvc.perform(get("/api/media"))
+            var contentAsString = mockMvc.perform(
+                    get("/api/media")
+            )
                     .andExpect(status().isOk())
                     .andReturn()
                     .getResponse()
@@ -142,7 +159,7 @@ class MediaControllerTest {
         public void when_name_not_correct_should_response_bad_request(String notCorrectName) throws Exception {
             CreateMediaRequest mediaRequest = new CreateMediaRequest();
             mediaRequest.setName(notCorrectName);
-            var content = mockMvc.perform(post("/api/media")
+            var content = mockMvc.perform(post("/api/media").header("Authorization", "Bearer " + jwtAdmin)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectToJson(mediaRequest)))
                     .andExpect(status().isBadRequest())
@@ -163,7 +180,7 @@ class MediaControllerTest {
 
             when(mockAddMedia.execute(name)).thenThrow(new AlreadyCreatedException(message));
 
-            var content = mockMvc.perform(post("/api/media")
+            var content = mockMvc.perform(post("/api/media").header("Authorization", "Bearer " + jwtAdmin)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectToJson(mediaRequest)))
                     .andExpect(status().isForbidden())
@@ -180,7 +197,7 @@ class MediaControllerTest {
             mediaRequest.setName("film");
             when(mockAddMedia.execute("film")).thenReturn(1L);
 
-            var location = mockMvc.perform(post("/api/media")
+            var location = mockMvc.perform(post("/api/media").header("Authorization", "Bearer " + jwtAdmin)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectToJson(mediaRequest)))
                     .andExpect(status().isCreated())
@@ -203,7 +220,7 @@ class MediaControllerTest {
         @ParameterizedTest
         @ValueSource(strings = {"notnumber", "2.3"})
         public void when_param_is_not_number_should_response_bad_request(String notNumber) throws Exception {
-            var errorContent = mockMvc.perform(delete("/api/media/" + notNumber))
+            var errorContent = mockMvc.perform(delete("/api/media/" + notNumber).header("Authorization", "Bearer " + jwtAdmin))
                     .andExpect(status().isBadRequest())
                     .andReturn()
                     .getResponse()
@@ -214,7 +231,7 @@ class MediaControllerTest {
         @ParameterizedTest
         @ValueSource(strings = {"-1", "0"})
         public void when_param_is_less_than_1_should_send_bad_request_response(String lessThan1) throws Exception {
-            var errorContent = mockMvc.perform(delete("/api/media/" + lessThan1))
+            var errorContent = mockMvc.perform(delete("/api/media/" + lessThan1).header("Authorization", "Bearer " + jwtAdmin))
                     .andExpect(status().isBadRequest())
                     .andReturn()
                     .getResponse()
@@ -227,7 +244,7 @@ class MediaControllerTest {
             var mediaId = 1L;
             var message = String.format("Media with id '%d' not found", mediaId);
             doThrow(new NotFoundException(message)).when(mockDeleteMedia).execute(mediaId);
-            var errorContent = mockMvc.perform(delete("/api/media/" + mediaId))
+            var errorContent = mockMvc.perform(delete("/api/media/" + mediaId).header("Authorization", "Bearer " + jwtAdmin))
                     .andExpect(status().isNotFound())
                     .andReturn()
                     .getResponse()
@@ -239,7 +256,7 @@ class MediaControllerTest {
         public void when_media_delete_should_send_success_noContent_response() throws Exception {
             var mediaId = 1L;
             doNothing().when(mockDeleteMedia).execute(mediaId);
-            mockMvc.perform(delete("/api/media/" + mediaId))
+            mockMvc.perform(delete("/api/media/" + mediaId).header("Authorization", "Bearer " + jwtAdmin))
                     .andExpect(status().isNoContent());
         }
     }

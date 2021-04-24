@@ -9,4 +9,10 @@ public class MediaMapper {
                 .setId(entity.getId())
                 .setName(entity.getName());
     }
+
+    public static MediaEntity domainToEntity(Media domain) {
+        return new MediaEntity()
+                .setId(domain.getId())
+                .setName(domain.getName());
+    }
 }

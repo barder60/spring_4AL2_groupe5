@@ -47,9 +47,7 @@ class SignUpTest {
     void when_username_already_exists_should_throw_exception() {
         when(mockUserDao.existsByUsername(userName)).thenReturn(true);
 
-        assertThatThrownBy(() -> {
-            sut.execute(userName, email, password, null);
-        }).isExactlyInstanceOf(AlreadyCreatedException.class)
+        assertThatThrownBy(() -> sut.execute(userName, email, password, null)).isExactlyInstanceOf(AlreadyCreatedException.class)
                 .hasMessage("User with username '" + userName + "' already exists");
     }
 

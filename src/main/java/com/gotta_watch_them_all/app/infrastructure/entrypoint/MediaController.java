@@ -11,6 +11,7 @@ import com.gotta_watch_them_all.app.usecase.media.FindAllMedias;
 import com.gotta_watch_them_all.app.usecase.media.FindMediaById;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,10 +25,11 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.*;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("api/media")
 @Validated
 @RequiredArgsConstructor
+@RequestMapping("api/media")
 public class MediaController {
     private final FindAllMedias findAllMedias;
     private final FindMediaById findMediaById;
@@ -53,6 +55,7 @@ public class MediaController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<URI> saveOne(@Valid @RequestBody CreateMediaRequest request) throws AlreadyCreatedException {
         var newMediaId = addMedia.execute(request.getName());
         var uid = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -63,6 +66,7 @@ public class MediaController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteOne(
             @PathVariable("id")
             @Pattern(regexp = "^\\d$", message = "id has to be an integer")

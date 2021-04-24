@@ -1,9 +1,10 @@
 package com.gotta_watch_them_all.app.e2e;
 
+import com.gotta_watch_them_all.app.core.dao.MediaDao;
+import com.gotta_watch_them_all.app.core.dao.RoleDao;
 import com.gotta_watch_them_all.app.core.entity.Media;
-import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.MediaEntity;
-import com.gotta_watch_them_all.app.infrastructure.dataprovider.mapper.MediaMapper;
-import com.gotta_watch_them_all.app.infrastructure.dataprovider.repository.MediaRepository;
+import com.gotta_watch_them_all.app.core.entity.RoleName;
+import com.gotta_watch_them_all.app.helper.AuthHelper;
 import com.gotta_watch_them_all.app.infrastructure.entrypoint.request.CreateMediaRequest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.*;
@@ -13,25 +14,40 @@ import org.springframework.boot.web.server.LocalServerPort;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.port;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
-@Disabled
 @SpringBootTest(webEnvironment = RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class MediaApiTest {
 
     @Autowired
-    private MediaRepository mediaRepository;
+    private MediaDao mediaRepository;
+
+    @Autowired
+    private AuthHelper authHelper;
+
+    @Autowired
+    private RoleDao roleDao;
 
     @LocalServerPort
     private int localPort;
 
+    private String jwtAdmin;
+
     @BeforeEach
     void setup() {
         port = localPort;
+    }
+
+    @BeforeAll
+    void initAll() {
+        var adminRole = roleDao.findByRoleName(RoleName.ROLE_ADMIN);
+        jwtAdmin = authHelper.createUserAndGetJwt("username", "user@name.fr", "password", Set.of(adminRole));
     }
 
     @DisplayName("METHOD GET /api/media")
@@ -40,14 +56,10 @@ public class MediaApiTest {
         @Test
         void should_get_all_medias() {
             mediaRepository.deleteAll();
-            MediaEntity filmMedia = new MediaEntity().setName("film");
-            MediaEntity seriesMedia = new MediaEntity().setName("series");
-            var mediaEntityList = Arrays.asList(filmMedia, seriesMedia);
-            mediaRepository.saveAll(mediaEntityList);
-
-            var expectedResponse = mediaEntityList.stream()
-                    .map(MediaMapper::entityToDomain)
-                    .collect(Collectors.toList());
+            Media filmMedia = new Media().setName("film");
+            Media seriesMedia = new Media().setName("series");
+            var mediaList = Arrays.asList(filmMedia, seriesMedia);
+            var expectedList = mediaRepository.saveAll(mediaList);
 
             List<Media> response = given()
                     .when()
@@ -59,8 +71,8 @@ public class MediaApiTest {
                     .getList(".", Media.class);
 
             assertThat(response).isNotNull();
-            assertThat(response.size()).isEqualTo(expectedResponse.size());
-            assertThat(response).isEqualTo(expectedResponse);
+            assertThat(response.size()).isEqualTo(expectedList.size());
+            assertThat(response).isEqualTo(expectedList);
         }
     }
 
@@ -69,13 +81,13 @@ public class MediaApiTest {
     class FindMediaById {
         @Test
         void when_id_correspond_to_one_media_should_return_concerned_media() {
-            MediaEntity filmMedia = new MediaEntity().setName("film");
-            MediaEntity seriesMedia = new MediaEntity().setName("series");
-            MediaEntity mangaMedia = new MediaEntity().setName("manga");
-            var mediaEntityList = Arrays.asList(filmMedia, seriesMedia, mangaMedia);
-            var savedMediaEntityList = mediaRepository.saveAll(mediaEntityList);
+            Media filmMedia = new Media().setName("film");
+            Media seriesMedia = new Media().setName("series");
+            Media mangaMedia = new Media().setName("manga");
+            var mediaList = Arrays.asList(filmMedia, seriesMedia, mangaMedia);
+            var savedMediaList = mediaRepository.saveAll(mediaList);
 
-            var expectMedia = MediaMapper.entityToDomain(savedMediaEntityList.get(1));
+            var expectMedia = savedMediaList.get(1);
             var response = given()
                     .when()
                     .get("/api/media/" + expectMedia.getId())
@@ -98,6 +110,7 @@ public class MediaApiTest {
             CreateMediaRequest request = new CreateMediaRequest();
             request.setName("series");
             var response = given()
+                    .header("Authorization", "Bearer " + jwtAdmin)
                     .contentType(ContentType.JSON)
                     .body(request)
                     .when()
@@ -120,11 +133,12 @@ public class MediaApiTest {
 
         @Test
         public void when_name_already_exist_should_send_error_response() {
-            mediaRepository.save(new MediaEntity().setName("series2"));
+            mediaRepository.createMedia("series2");
             CreateMediaRequest request = new CreateMediaRequest();
             request.setName("series2");
 
             var response = given()
+                    .header("Authorization", "Bearer " + jwtAdmin)
                     .contentType(ContentType.JSON)
                     .body(request)
                     .when()
@@ -142,18 +156,18 @@ public class MediaApiTest {
     class DeleteMedia {
         @Test
         void when_media_with_certain_id_found_should_delete_concerned_media() {
-            var mediaToSave = new MediaEntity()
-                    .setName("film");
-            var mediaToDelete = mediaRepository.save(mediaToSave);
+            var mediaToDelete = mediaRepository.createMedia("film");
 
-            when()
-                    .delete("/api/media/" + mediaToDelete.getId())
+            given()
+                    .header("Authorization", "Bearer " + jwtAdmin)
+                    .when()
+                    .delete("/api/media/" + mediaToDelete)
                     .then()
                     .statusCode(204);
 
-            var maybeMedia = mediaRepository.findById(mediaToDelete.getId());
+            var maybeMedia = mediaRepository.findById(mediaToDelete);
 
-            assertThat(maybeMedia.isPresent()).isFalse();
+            assertThat(maybeMedia).isNull();
         }
     }
 }

@@ -46,15 +46,18 @@ public class AuthApiTest {
                     .setUsername("new user name")
                     .setEmail("newuser@email.com")
                     .setPassword("newuserpassword");
-            var response = given()
+            given()
                     .contentType(ContentType.JSON)
                     .body(signupRequest)
                     .when()
                     .post("/api/auth/signup")
                     .then()
+                    .statusCode(200)
                     .extract()
                     .asString();
-            System.out.println(response);
+
+            assertThat(userDao.existsByUsername(signupRequest.getUsername())).isTrue();
+            assertThat(userDao.existsByEmail(signupRequest.getEmail())).isTrue();
         }
     }
 
@@ -88,6 +91,7 @@ public class AuthApiTest {
                     .when()
                     .post("/api/auth/signin")
                     .then()
+                    .statusCode(200)
                     .extract()
                     .as(JwtResponse.class);
 

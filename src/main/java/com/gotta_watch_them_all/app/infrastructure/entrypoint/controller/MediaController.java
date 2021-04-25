@@ -1,4 +1,4 @@
-package com.gotta_watch_them_all.app.infrastructure.entrypoint;
+package com.gotta_watch_them_all.app.infrastructure.entrypoint.controller;
 
 import com.gotta_watch_them_all.app.core.exception.AlreadyCreatedException;
 import com.gotta_watch_them_all.app.core.exception.NotFoundException;

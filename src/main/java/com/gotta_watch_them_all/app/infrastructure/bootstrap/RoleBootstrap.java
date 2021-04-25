@@ -21,7 +21,6 @@ public class RoleBootstrap {
     public void on(ApplicationReadyEvent event) {
         var roleNames = Arrays.asList(RoleName.ROLE_USER, RoleName.ROLE_ADMIN);
         var result = getAllSavedRoleNames();
-        if (result.containsAll(roleNames)) return;
 
         createNotSavedRoles(roleNames, result);
     }

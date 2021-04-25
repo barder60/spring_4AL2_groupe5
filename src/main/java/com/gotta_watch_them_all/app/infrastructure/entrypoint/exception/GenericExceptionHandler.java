@@ -32,7 +32,6 @@ public class GenericExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(AlreadyCreatedException.class)
     public ResponseEntity<String> on(AlreadyCreatedException ex) {
-        System.out.println("message of exception : " + ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 

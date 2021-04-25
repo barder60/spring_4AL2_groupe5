@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 @Service
 @RequiredArgsConstructor
-public class FindOneMedia {
+public class FindMediaById {
     private final MediaDao mediaDao;
 
     public Media execute(Long mediaId) throws NotFoundException {

@@ -16,4 +16,8 @@ public interface MediaDao {
     void deleteMedia(Long mediaId);
 
     boolean existsById(Long mediaId);
+
+    void deleteAll();
+
+    List<Media> saveAll(List<Media> mediaList);
 }

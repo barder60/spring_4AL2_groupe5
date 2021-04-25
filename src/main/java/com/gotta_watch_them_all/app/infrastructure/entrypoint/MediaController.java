@@ -8,9 +8,10 @@ import com.gotta_watch_them_all.app.infrastructure.entrypoint.response.MediaResp
 import com.gotta_watch_them_all.app.usecase.media.AddMedia;
 import com.gotta_watch_them_all.app.usecase.media.DeleteMedia;
 import com.gotta_watch_them_all.app.usecase.media.FindAllMedias;
-import com.gotta_watch_them_all.app.usecase.media.FindOneMedia;
+import com.gotta_watch_them_all.app.usecase.media.FindMediaById;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,12 +26,12 @@ import java.util.stream.Collectors;
 import static org.springframework.http.ResponseEntity.*;
 
 @RestController
-@RequestMapping("api/media")
 @Validated
 @RequiredArgsConstructor
+@RequestMapping("api/media")
 public class MediaController {
     private final FindAllMedias findAllMedias;
-    private final FindOneMedia findOneMedia;
+    private final FindMediaById findMediaById;
     private final AddMedia addMedia;
     private final DeleteMedia deleteMedia;
 
@@ -48,11 +49,12 @@ public class MediaController {
             @Pattern(regexp = "^\\d$", message = "id has to be an integer")
             @Min(value = 1, message = "id has to be equal or more than 1") String mediaId
     ) throws NotFoundException {
-        var media = findOneMedia.execute(Long.parseLong(mediaId));
+        var media = findMediaById.execute(Long.parseLong(mediaId));
         return ok(MediaAdapter.domainToResponse(media));
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<URI> saveOne(@Valid @RequestBody CreateMediaRequest request) throws AlreadyCreatedException {
         var newMediaId = addMedia.execute(request.getName());
         var uid = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -63,6 +65,7 @@ public class MediaController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteOne(
             @PathVariable("id")
             @Pattern(regexp = "^\\d$", message = "id has to be an integer")

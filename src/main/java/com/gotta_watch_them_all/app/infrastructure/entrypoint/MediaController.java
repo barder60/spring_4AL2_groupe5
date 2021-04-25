@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.*;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @Validated
 @RequiredArgsConstructor

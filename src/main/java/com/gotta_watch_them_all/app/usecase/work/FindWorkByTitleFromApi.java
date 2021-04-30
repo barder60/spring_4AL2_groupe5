@@ -14,6 +14,6 @@ public class FindWorkByTitleFromApi {
     private final WorkDao workDao;
 
     public Set<Work> execute(String title) {
-        return null;
+       return workDao.findAllByTitle(title);
     }
 }

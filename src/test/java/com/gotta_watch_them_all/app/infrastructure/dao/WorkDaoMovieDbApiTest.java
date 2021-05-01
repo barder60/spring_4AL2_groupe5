@@ -65,12 +65,12 @@ class WorkDaoMovieDbApiTest {
     @Test
     public void findAllByTitle_should_return_all_works_containing_title() throws IllegalTitleGivenException, AnySearchValueFoundException, BadHttpRequestException {
         List<Object> expectedWorksList = new ArrayList<>();
-        expectedWorksList.add(new Work().setId(1L).setTitle("Harry Potter et ceci"));
-        expectedWorksList.add(new Work().setId(1L).setTitle("Harry Potter et cela"));
+        expectedWorksList.add(new Work().setId("1").setTitle("Harry Potter et ceci"));
+        expectedWorksList.add(new Work().setId("1").setTitle("Harry Potter et cela"));
 
         Set<Work> expectedWorksSet = new HashSet<>();
-        expectedWorksSet.add(new Work().setId(1L).setTitle("Harry Potter et ceci"));
-        expectedWorksSet.add(new Work().setId(1L).setTitle("Harry Potter et cela"));
+        expectedWorksSet.add(new Work().setId("1").setTitle("Harry Potter et ceci"));
+        expectedWorksSet.add(new Work().setId("1").setTitle("Harry Potter et cela"));
 
         Mockito.when(apiRequestBuilderMock.setTitleToSearch(Mockito.anyString())).thenReturn(apiRequestBuilderMock);
         Mockito.when(apiRequestBuilderMock.build()).thenReturn(HttpRequest.newBuilder().uri(URI.create("https://local")).build());
@@ -84,14 +84,14 @@ class WorkDaoMovieDbApiTest {
     @Test
     public void findAllByTitle_should_return_all_works_containing_title_without_duplicates() throws IllegalTitleGivenException, AnySearchValueFoundException, BadHttpRequestException {
         List<Object> expectedWorksList = new ArrayList<>();
-        expectedWorksList.add(new Work().setId(1L).setTitle("Harry Potter et ceci"));
-        expectedWorksList.add(new Work().setId(1L).setTitle("Harry Potter et ceci"));
-        expectedWorksList.add(new Work().setId(1L).setTitle("Harry Potter et cela"));
-        expectedWorksList.add(new Work().setId(1L).setTitle("Harry Potter et cela"));
+        expectedWorksList.add(new Work().setId("1").setTitle("Harry Potter et ceci"));
+        expectedWorksList.add(new Work().setId("1").setTitle("Harry Potter et ceci"));
+        expectedWorksList.add(new Work().setId("1").setTitle("Harry Potter et cela"));
+        expectedWorksList.add(new Work().setId("1").setTitle("Harry Potter et cela"));
 
         Set<Work> expectedWorksSet = new HashSet<>();
-        expectedWorksSet.add(new Work().setId(1L).setTitle("Harry Potter et ceci"));
-        expectedWorksSet.add(new Work().setId(1L).setTitle("Harry Potter et cela"));
+        expectedWorksSet.add(new Work().setId("1").setTitle("Harry Potter et ceci"));
+        expectedWorksSet.add(new Work().setId("1").setTitle("Harry Potter et cela"));
 
         Mockito.when(apiRequestBuilderMock.setTitleToSearch(Mockito.anyString())).thenReturn(apiRequestBuilderMock);
         Mockito.when(apiRequestBuilderMock.build()).thenReturn(HttpRequest.newBuilder().uri(URI.create("https://local")).build());
@@ -105,14 +105,14 @@ class WorkDaoMovieDbApiTest {
     @Test
     public void findAllByTitle_should_throw_exception_if_json_malformed() throws IllegalTitleGivenException, AnySearchValueFoundException, BadHttpRequestException {
         List<Object> expectedWorksList = new ArrayList<>();
-        expectedWorksList.add(new Work().setId(1L).setTitle("Harry Potter et ceci"));
-        expectedWorksList.add(new Work().setId(1L).setTitle("Harry Potter et ceci"));
-        expectedWorksList.add(new Work().setId(1L).setTitle("Harry Potter et cela"));
-        expectedWorksList.add(new Work().setId(1L).setTitle("Harry Potter et cela"));
+        expectedWorksList.add(new Work().setId("1").setTitle("Harry Potter et ceci"));
+        expectedWorksList.add(new Work().setId("1").setTitle("Harry Potter et ceci"));
+        expectedWorksList.add(new Work().setId("1").setTitle("Harry Potter et cela"));
+        expectedWorksList.add(new Work().setId("1").setTitle("Harry Potter et cela"));
 
         Set<Work> expectedWorksSet = new HashSet<>();
-        expectedWorksSet.add(new Work().setId(1L).setTitle("Harry Potter et ceci"));
-        expectedWorksSet.add(new Work().setId(1L).setTitle("Harry Potter et cela"));
+        expectedWorksSet.add(new Work().setId("1").setTitle("Harry Potter et ceci"));
+        expectedWorksSet.add(new Work().setId("1").setTitle("Harry Potter et cela"));
 
         Mockito.when(apiRequestBuilderMock.setTitleToSearch(Mockito.anyString())).thenReturn(apiRequestBuilderMock);
         Mockito.when(apiRequestBuilderMock.build()).thenReturn(HttpRequest.newBuilder().uri(URI.create("https://local")).build());

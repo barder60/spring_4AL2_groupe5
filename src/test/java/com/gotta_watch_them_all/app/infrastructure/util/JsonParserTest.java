@@ -35,7 +35,7 @@ class JsonParserTest {
 
     @Test
     public void shouldReturnJsonRaw() throws JsonProcessingException {
-        Work toParse = new Work().setId(1L).setTitle("titre");
+        Work toParse = new Work().setId("1").setTitle("titre");
         when(mapper.writeValueAsString(toParse)).thenReturn("Parsing worked fine");
         String raw = jsonParser.toRaw(toParse);
         assertEquals("Parsing worked fine", raw);

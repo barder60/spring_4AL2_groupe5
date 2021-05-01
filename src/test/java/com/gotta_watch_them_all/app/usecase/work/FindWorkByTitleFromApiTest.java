@@ -4,7 +4,6 @@ import com.gotta_watch_them_all.app.core.entity.Work;
 import com.gotta_watch_them_all.app.infrastructure.dao.WorkDaoMovieDbApi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.util.HashSet;
@@ -33,8 +32,8 @@ class FindWorkByTitleFromApiTest {
     @Test
     public void should_parse_works_from_api() {
         Set<Work> expectedWorks = new HashSet<>();
-        expectedWorks.add(new Work().setId(1L).setTitle("Harry Potter et ceci"));
-        expectedWorks.add(new Work().setId(1L).setTitle("Harry Potter et cela"));
+        expectedWorks.add(new Work().setId("1").setTitle("Harry Potter et ceci"));
+        expectedWorks.add(new Work().setId("1").setTitle("Harry Potter et cela"));
 
         Mockito.when(workDaoMovieDbApiMock.findAllByTitle(Mockito.anyString())).thenReturn(expectedWorks);
 

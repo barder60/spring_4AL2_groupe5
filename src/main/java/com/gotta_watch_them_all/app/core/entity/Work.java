@@ -8,9 +8,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @RequiredArgsConstructor
 public class Work {
-    private Long id;
+    private String id;
     private String title;
     private String description;
     private String author;
+    private Integer year;
     private Media media;
 }

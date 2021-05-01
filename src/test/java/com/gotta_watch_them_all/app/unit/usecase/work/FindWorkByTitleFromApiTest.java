@@ -1,9 +1,10 @@
-package com.gotta_watch_them_all.app.usecase.work;
+package com.gotta_watch_them_all.app.unit.usecase.work;
 
 import com.gotta_watch_them_all.app.core.entity.Work;
 import com.gotta_watch_them_all.app.core.exception.IllegalTitleGivenException;
 import com.gotta_watch_them_all.app.core.exception.NotFoundException;
 import com.gotta_watch_them_all.app.infrastructure.dao.WorkDaoMovieDbApi;
+import com.gotta_watch_them_all.app.usecase.work.FindWorkByTitleFromApi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

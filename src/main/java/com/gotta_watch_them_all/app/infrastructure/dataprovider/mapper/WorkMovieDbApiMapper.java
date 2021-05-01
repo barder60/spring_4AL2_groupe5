@@ -3,7 +3,9 @@ package com.gotta_watch_them_all.app.infrastructure.dataprovider.mapper;
 import com.gotta_watch_them_all.app.core.entity.Media;
 import com.gotta_watch_them_all.app.core.entity.Work;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.WorkMovieDbApiEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class WorkMovieDbApiMapper {
     public Work toDomain(WorkMovieDbApiEntity entity) {
         if (entity == null) return new Work();
@@ -14,11 +16,8 @@ public class WorkMovieDbApiMapper {
                 .setMedia(mapMedia(entity.getType()));
     }
 
-    public WorkMovieDbApiEntity toEntity(Work work) {
-        return null;
-    }
-
     private Media mapMedia(String type) {
+        if (type == null || type.isBlank()) return new Media();
         if (type.equalsIgnoreCase("movie")) {
             return new Media().setName("Film");
         } else if (type.equalsIgnoreCase("series")) {

@@ -29,13 +29,13 @@ class WorkMovieDbApiMapperTest {
                 .setImdbID("example")
                 .setTitle("title")
                 .setType("movie")
-                .setYear(2019);
+                .setYear("2019");
 
         Work expected = new Work()
                 .setId("example")
                 .setTitle("title")
                 .setMedia(new Media().setName("Film"))
-                .setYear(2019);
+                .setYear("2019");
 
         assertEquals(expected, sut.toDomain(entity));
     }
@@ -46,13 +46,13 @@ class WorkMovieDbApiMapperTest {
                 .setImdbID("example")
                 .setTitle("title")
                 .setType("movie")
-                .setYear(2019);
+                .setYear("2019");
 
         Work expected = new Work()
                 .setId("example")
                 .setTitle("title")
                 .setMedia(new Media().setName("Film"))
-                .setYear(2019);
+                .setYear("2019");
 
         assertEquals(expected, sut.toDomain(entity));
     }
@@ -63,13 +63,13 @@ class WorkMovieDbApiMapperTest {
                 .setImdbID("example")
                 .setTitle("title")
                 .setType("series")
-                .setYear(2019);
+                .setYear("2019");
 
         Work expected = new Work()
                 .setId("example")
                 .setTitle("title")
                 .setMedia(new Media().setName("Série"))
-                .setYear(2019);
+                .setYear("2019");
 
         assertEquals(expected, sut.toDomain(entity));
     }
@@ -80,13 +80,13 @@ class WorkMovieDbApiMapperTest {
                 .setImdbID("example")
                 .setTitle("title")
                 .setType("episode")
-                .setYear(2019);
+                .setYear("2019");
 
         Work expected = new Work()
                 .setId("example")
                 .setTitle("title")
                 .setMedia(new Media().setName("Episode"))
-                .setYear(2019);
+                .setYear("2019");
 
         assertEquals(expected, sut.toDomain(entity));
     }

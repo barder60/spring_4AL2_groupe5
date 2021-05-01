@@ -12,6 +12,6 @@ public class Work {
     private String title;
     private String description;
     private String author;
-    private Integer year;
+    private String year;
     private Media media;
 }

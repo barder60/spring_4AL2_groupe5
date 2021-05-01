@@ -2,6 +2,7 @@ package com.gotta_watch_them_all.app.infrastructure.util;
 
 import com.gotta_watch_them_all.app.core.exception.BadHttpRequestException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

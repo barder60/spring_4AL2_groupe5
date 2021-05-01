@@ -5,7 +5,7 @@ import com.gotta_watch_them_all.app.core.entity.Work;
 import com.gotta_watch_them_all.app.core.exception.AnySearchValueFoundException;
 import com.gotta_watch_them_all.app.core.exception.BadHttpRequestException;
 import com.gotta_watch_them_all.app.core.exception.IllegalTitleGivenException;
-import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.WorkMovieDbApiEntity;
+import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.SearchMovieDbEntity;
 import com.gotta_watch_them_all.app.infrastructure.dataprovider.mapper.WorkMovieDbApiMapper;
 import com.gotta_watch_them_all.app.infrastructure.util.ApiRequestBuilder;
 import com.gotta_watch_them_all.app.infrastructure.util.ApiRequester;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 
 import java.net.http.HttpRequest;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,8 +34,9 @@ public class WorkDaoMovieDbApi implements WorkDao {
                     .setTitleToSearch(title)
                     .build();
             String jsonRaw = apiRequester.request(request);
-            List<WorkMovieDbApiEntity> workEntities = jsonParser.toObjectList(jsonRaw, WorkMovieDbApiEntity.class);
-            return workEntities
+            SearchMovieDbEntity search = jsonParser.toObject(jsonRaw, SearchMovieDbEntity.class);
+
+            return search.getWorkMovieDbApiEntities()
                     .stream()
                     .map(mapper::toDomain)
                     .collect(Collectors.toSet());

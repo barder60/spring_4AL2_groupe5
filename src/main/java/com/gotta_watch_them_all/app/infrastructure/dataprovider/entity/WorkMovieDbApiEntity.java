@@ -1,13 +1,22 @@
 package com.gotta_watch_them_all.app.infrastructure.dataprovider.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
 public class WorkMovieDbApiEntity {
+
+    @JsonProperty("Title")
     private String title;
-    private Integer year;
+
+    @JsonProperty("Year")
+    private String year;
+
+    @JsonProperty("Type")
     private String type;
+
+    @JsonProperty("imdbID")
     private String imdbID;
 }

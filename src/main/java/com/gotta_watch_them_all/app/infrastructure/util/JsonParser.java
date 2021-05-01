@@ -1,6 +1,7 @@
 package com.gotta_watch_them_all.app.infrastructure.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class JsonParser {
 
     public <T> List<T> toObjectList(final String raw, final Class<T> type) {
         try {
+            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
             return this.mapper.readValue(raw, this.mapper.getTypeFactory().constructCollectionType(ArrayList.class, type));
         } catch (IOException e) {
             e.printStackTrace();
@@ -27,6 +29,7 @@ public class JsonParser {
 
     public <T> T toObject(final String raw, final Class<T> type) {
         try {
+            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
             return this.mapper.readValue(raw, this.mapper.getTypeFactory().constructType(type));
         } catch (IOException | NullPointerException e) {
             e.printStackTrace();

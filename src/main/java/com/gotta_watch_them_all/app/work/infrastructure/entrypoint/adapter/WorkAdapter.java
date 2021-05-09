@@ -12,7 +12,8 @@ public class WorkAdapter {
                 .setId(work.getId())
                 .setTitle(work.getTitle())
                 .setType(work.getMedia().getName())
-                .setYear(work.getYear());
+                .setYear(work.getYear())
+                .setPoster(work.getPoster());
     }
 
     public static Set<WorkResponse> domainToResponseSet(Set<Work> work) {

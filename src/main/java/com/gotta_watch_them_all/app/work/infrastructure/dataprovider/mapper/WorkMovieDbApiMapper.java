@@ -13,6 +13,7 @@ public class WorkMovieDbApiMapper {
                 .setId(entity.getImdbID())
                 .setTitle(entity.getTitle())
                 .setYear(entity.getYear())
+                .setPoster(entity.getPoster())
                 .setMedia(mapMedia(entity.getType()));
     }
 

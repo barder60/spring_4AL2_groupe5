@@ -17,6 +17,9 @@ public class WorkMovieDbApiEntity {
     @JsonProperty("Type")
     private String type;
 
+    @JsonProperty("Poster")
+    private String poster;
+
     @JsonProperty("imdbID")
     private String imdbID;
 }

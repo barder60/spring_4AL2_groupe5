@@ -1,15 +1,16 @@
-package com.gotta_watch_them_all.app.infrastructure.dao;
+package com.gotta_watch_them_all.app.work.unit.infrastructure.dao;
 
-import com.gotta_watch_them_all.app.core.entity.Work;
-import com.gotta_watch_them_all.app.core.exception.AnySearchValueFoundException;
-import com.gotta_watch_them_all.app.core.exception.BadHttpRequestException;
-import com.gotta_watch_them_all.app.core.exception.IllegalTitleGivenException;
-import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.SearchMovieDbEntity;
-import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.WorkMovieDbApiEntity;
-import com.gotta_watch_them_all.app.infrastructure.dataprovider.mapper.WorkMovieDbApiMapper;
-import com.gotta_watch_them_all.app.infrastructure.util.ApiRequestBuilder;
-import com.gotta_watch_them_all.app.infrastructure.util.ApiRequester;
-import com.gotta_watch_them_all.app.infrastructure.util.JsonParser;
+import com.gotta_watch_them_all.app.work.core.entity.Work;
+import com.gotta_watch_them_all.app.work.core.exception.AnySearchValueFoundException;
+import com.gotta_watch_them_all.app.work.core.exception.BadHttpRequestException;
+import com.gotta_watch_them_all.app.work.core.exception.IllegalTitleGivenException;
+import com.gotta_watch_them_all.app.work.infrastructure.dao.WorkDaoMovieDbApi;
+import com.gotta_watch_them_all.app.work.infrastructure.util.JsonParser;
+import com.gotta_watch_them_all.app.work.infrastructure.dataprovider.entity.SearchMovieDbEntity;
+import com.gotta_watch_them_all.app.work.infrastructure.dataprovider.entity.WorkMovieDbApiEntity;
+import com.gotta_watch_them_all.app.work.infrastructure.dataprovider.mapper.WorkMovieDbApiMapper;
+import com.gotta_watch_them_all.app.work.infrastructure.util.ApiRequestBuilder;
+import com.gotta_watch_them_all.app.work.infrastructure.util.ApiRequester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

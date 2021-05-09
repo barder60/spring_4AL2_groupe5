@@ -1,7 +1,8 @@
-package com.gotta_watch_them_all.app.infrastructure.util;
+package com.gotta_watch_them_all.app.work.unit.infrastructure.util;
 
 
-import com.gotta_watch_them_all.app.core.exception.BadHttpRequestException;
+import com.gotta_watch_them_all.app.work.core.exception.BadHttpRequestException;
+import com.gotta_watch_them_all.app.work.infrastructure.util.ApiRequester;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

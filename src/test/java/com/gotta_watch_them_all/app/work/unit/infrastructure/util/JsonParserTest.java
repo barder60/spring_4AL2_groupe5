@@ -1,8 +1,9 @@
-package com.gotta_watch_them_all.app.infrastructure.util;
+package com.gotta_watch_them_all.app.work.unit.infrastructure.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.gotta_watch_them_all.app.core.entity.Work;
+import com.gotta_watch_them_all.app.work.core.entity.Work;
+import com.gotta_watch_them_all.app.work.infrastructure.util.JsonParser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

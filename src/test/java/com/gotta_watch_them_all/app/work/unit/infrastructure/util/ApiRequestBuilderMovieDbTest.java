@@ -1,7 +1,8 @@
-package com.gotta_watch_them_all.app.infrastructure.util;
+package com.gotta_watch_them_all.app.work.unit.infrastructure.util;
 
-import com.gotta_watch_them_all.app.core.exception.AnySearchValueFoundException;
-import com.gotta_watch_them_all.app.core.exception.IllegalTitleGivenException;
+import com.gotta_watch_them_all.app.work.core.exception.AnySearchValueFoundException;
+import com.gotta_watch_them_all.app.work.core.exception.IllegalTitleGivenException;
+import com.gotta_watch_them_all.app.work.infrastructure.util.ApiRequestBuilderMovieDb;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

@@ -1,8 +1,9 @@
-package com.gotta_watch_them_all.app.infrastructure.dataprovider.mapper;
+package com.gotta_watch_them_all.app.work.unit.infrastructure.dataprovider.mapper;
 
 import com.gotta_watch_them_all.app.core.entity.Media;
-import com.gotta_watch_them_all.app.core.entity.Work;
-import com.gotta_watch_them_all.app.infrastructure.dataprovider.entity.WorkMovieDbApiEntity;
+import com.gotta_watch_them_all.app.work.core.entity.Work;
+import com.gotta_watch_them_all.app.work.infrastructure.dataprovider.entity.WorkMovieDbApiEntity;
+import com.gotta_watch_them_all.app.work.infrastructure.dataprovider.mapper.WorkMovieDbApiMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

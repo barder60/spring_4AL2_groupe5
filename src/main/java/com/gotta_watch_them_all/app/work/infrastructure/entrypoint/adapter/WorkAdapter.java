@@ -1,7 +1,7 @@
-package com.gotta_watch_them_all.app.infrastructure.entrypoint.adapter;
+package com.gotta_watch_them_all.app.work.infrastructure.entrypoint.adapter;
 
-import com.gotta_watch_them_all.app.core.entity.Work;
-import com.gotta_watch_them_all.app.infrastructure.entrypoint.response.WorkResponse;
+import com.gotta_watch_them_all.app.work.core.entity.Work;
+import com.gotta_watch_them_all.app.work.infrastructure.entrypoint.response.WorkResponse;
 
 import java.util.Set;
 import java.util.stream.Collectors;

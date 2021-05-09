@@ -1,4 +1,4 @@
-package com.gotta_watch_them_all.app.infrastructure.entrypoint.response;
+package com.gotta_watch_them_all.app.work.infrastructure.entrypoint.response;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
